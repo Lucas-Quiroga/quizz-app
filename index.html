@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+  <title>Quiz App</title>
+</head>
+
+<body>
+  <div class="container d-flex flex-column justify-content-center text-center vh-100 border">
+    <h1>Quiz App</h1>
+    <div id="question-container" class="my-4">
+      <h2 id="question">ACA VA LA PREGUNTA</h2>
+      <span id="category">ACA VA LA CATEGORIA</span>
+    </div>
+    <div id="choices-container" class="d-flex flex-column gap-3">
+      <button class="btn btn-secondary">1</button>
+      <button class="btn btn-secondary">2</button>
+      <button class="btn btn-secondary">3</button>
+      <button class="btn btn-secondary">4</button>
+    </div>
+    <button id="next-btn" class="btn btn-primary my-3">Next</button>
+    <div id="score-container" class="mt-4">
+      <!-- Aquí se mostrará la puntuación actual -->
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
