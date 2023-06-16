@@ -1,8 +1,7 @@
 // CONSTANTES DEL DOM
-const siguienteBoton = document.getElementById("next-btn");
+
 const pregunta = document.getElementById("question");
 const categoria = document.getElementById("category");
-const contenedorPuntuacion = document.getElementById("score-container");
 
 // MOSTRAR PREGUNTA
 function mostrarPregunta(preguntaActual) {
@@ -38,15 +37,6 @@ function mostrarOpciones(preguntaActual) {
   });
 }
 
-// MOSTRAR PUNTAJE
-function mostrarPuntaje(puntuacion) {
-  if (!puntuacionh4) {
-    puntuacionh4 = document.createElement("h4");
-    contenedorPuntuacion.appendChild(puntuacionh4);
-  }
-  puntuacionh4.innerText = `${puntuacion}`;
-}
-
 /**
  * Otra logica
  */
@@ -75,4 +65,4 @@ function obtenerRespuesta(pregunta, opcion) {
   }
 }
 
-export { mostrarPregunta, mostrarCategoria, mostrarPuntaje, mostrarOpciones };
+export { mostrarPregunta, mostrarCategoria, mostrarOpciones, obtenerRespuesta };
