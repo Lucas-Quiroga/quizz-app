@@ -29,6 +29,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background: #8f81b3;
 }
 
 h1 {
@@ -81,6 +82,11 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+#dad-conteinter{
+  background-color: white;
+  border-radius: 30px;
 }
 
 @media (prefers-color-scheme: light) {

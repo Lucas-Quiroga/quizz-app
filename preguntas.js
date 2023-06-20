@@ -1,10 +1,3 @@
-// import {
-//   mostrarCategoria,
-//   mostrarOpciones,
-//   mostrarPregunta,
-//   siguientePregunta,
-//   mostrarPuntaje,
-// } from "./vistas";
 import { obtenerDatosApi } from "./api";
 
 const containerPrincipal = document.getElementById("dad-conteinter");
@@ -12,23 +5,62 @@ const siguienteBoton = document.getElementById("next-btn");
 const contenedorPuntuacion = document.getElementById("score-container");
 const pregunta = document.getElementById("question");
 const categoria = document.getElementById("category");
+const timerElement = document.getElementById("timer");
+const timerText = document.getElementById("timer-text");
+const questionNumber = document.getElementById("questionNumber");
+
+let timeLeft = 100;
 let indicePregunta = 0;
 let datos;
 let opcionSeleccionada = false;
 let puntuacion = 0;
 let puntuacionElemento;
+let respuestaSeleccionada;
+let juegoTerminado = false;
+let totalPreguntas;
 
 // INICIAR EL JUEGO
 export async function iniciarJuego() {
   datos = await obtenerDatosApi();
-
+  startTimer();
+  totalPreguntas = datos.results.length;
+  containerPrincipal.classList.remove("visually-hidden");
   puntuacionElemento = document.createElement("h4");
   contenedorPuntuacion.appendChild(puntuacionElemento);
   mostrarPregunta(datos.results[indicePregunta]);
   mostrarCategoria(datos.results[indicePregunta]);
   mostrarOpciones(datos.results[indicePregunta]);
+  questionNumberFunc(0);
   mostrarPuntaje();
   siguienteBoton.addEventListener("click", siguientePregunta);
+}
+
+function startTimer() {
+  const intervalId = setInterval(() => {
+    timeLeft--;
+    timerElement.style.width = `${timeLeft}%`;
+    timerText.innerHTML = `${timeLeft}`;
+
+    if (timeLeft <= 0 && !juegoTerminado) {
+      clearInterval(intervalId);
+      mostrarMensajeTiempoAgotado();
+    }
+  }, 1000); // Actualiza cada segundo
+}
+
+function mostrarMensajeTiempoAgotado() {
+  containerPrincipal.innerHTML = `
+    <div class="card text-center">
+      <div class="card-header">
+        Juego finalizado
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Puntuación: ${puntuacion} de ${totalPreguntas}</h5>
+        <p class="card-text">¡Se acabó el tiempo!</p>
+        <a href="/" class="btn btn-primary">Volver a jugar</a>
+      </div>
+    </div>
+  `;
 }
 
 // MOSTRAR PREGUNTA
@@ -36,9 +68,13 @@ function mostrarPregunta(preguntaActual) {
   pregunta.innerHTML = preguntaActual.question;
 }
 
+function questionNumberFunc(preguntaActual) {
+  questionNumber.innerText = `Pregunta Nº: ${preguntaActual + 1} / 10`;
+}
+
 // MOSTRAR CATEGORIA
 function mostrarCategoria(preguntaActual) {
-  categoria.innerText = preguntaActual.category;
+  categoria.innerText = `Categoria: ${preguntaActual.category}`;
 }
 
 // MOSTRAMOS LAS OPCIONES
@@ -56,7 +92,7 @@ function mostrarOpciones(preguntaActual) {
     contenedorOpciones.appendChild(boton);
     if (opcion === preguntaActual.correct_answer) {
       boton.onclick = () => {
-        obtenerRespuesta(preguntaActual, opcion);
+        obtenerRespuesta(opcion);
         boton.classList.add("btn", "btn-success");
         desactivarOpciones(contenedorOpciones);
         opcionSeleccionada = true;
@@ -64,7 +100,7 @@ function mostrarOpciones(preguntaActual) {
       opcionSeleccionada = false;
     } else {
       boton.onclick = () => {
-        obtenerRespuesta(preguntaActual, opcion);
+        obtenerRespuesta(opcion);
         boton.classList.add("btn", "btn-danger");
         desactivarOpciones(contenedorOpciones);
         mostrarRespuestaCorrecta(
@@ -84,48 +120,46 @@ function siguientePregunta() {
     return;
   }
   const preguntaActual = datos.results[indicePregunta];
+  const respuestaUsuario = respuestaSeleccionada; // Obtener la respuesta seleccionada por el usuario
 
-  const respuestaUsuario = obtenerRespuesta(preguntaActual);
   if (respuestaUsuario === preguntaActual.correct_answer) {
-    puntuacion = puntuacion + 1;
+    sumarPuntaje();
     mostrarPuntaje();
   }
 
   indicePregunta++;
 
   if (indicePregunta >= datos.results.length) {
+    juegoTerminado = true;
     containerPrincipal.innerHTML = `
     <div class="card text-center">
-  <div class="card-header">
-    Featured
+    <div class="card-header">
+      Juego finalizado
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Puntuación: ${puntuacion} de ${totalPreguntas}</h5>
+      <p class="card-text">¡Has completado todas las preguntas!</p>
+      <a href="/" class="btn btn-primary">Volver a jugar</a>
+    </div>
   </div>
-  <div class="card-body">
-    <h5 class="card-title">Special title treatment</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
-  </div>
-  <a href="/" class="btn btn-primary">Volver a jugar</a>
-  <div class="card-footer text-body-secondary">
-    2 days ago
-  </div>
-</div>
     `;
   } else {
     // Mostrar la siguiente pregunta
     mostrarPregunta(datos.results[indicePregunta]);
     mostrarCategoria(datos.results[indicePregunta]);
     mostrarOpciones(datos.results[indicePregunta]);
+    questionNumberFunc(indicePregunta);
   }
 }
 
 // MOSTRAR PUNTAJE
 function mostrarPuntaje() {
-  puntuacionElemento.innerText = puntuacion;
+  puntuacionElemento.innerText = `${puntuacion}`;
 }
 
-/**
- * Otra logica
- */
+function sumarPuntaje() {
+  return (puntuacion += 1);
+}
 
 // ORDENAR LAS OPCIONES ALEATORIAMENTE
 function ordenarOpciones(array) {
@@ -141,9 +175,9 @@ function crearBotonOpcion(opcion) {
   return boton;
 }
 
-// AGARRAR LA RESPUESTA CORRECTA
-function obtenerRespuesta(pregunta, opcion) {
-  if (opcion === pregunta.correct_answer) return opcion;
+// AGARRAR LA RESPUESTA
+function obtenerRespuesta(opcion) {
+  respuestaSeleccionada = opcion;
 }
 
 // DESACTIVAR OPCIONES
