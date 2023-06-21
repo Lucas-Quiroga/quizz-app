@@ -14,7 +14,7 @@ This project utilizes the Open Trivia Database (OpenTDB) API. It provides a wide
 
 ## Deployment 📦
 
-- [DEMO](https://newsletter-sign-up-app.netlify.app/) - Website
+- [DEMO](https://quizz-app-api-iphone.netlify.app/) - Website
 
 ## Challenge Description
 
