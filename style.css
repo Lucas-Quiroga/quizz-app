@@ -29,12 +29,25 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background: #8f81b3;
+    background: linear-gradient(-45deg, #FF9A8B, #FFD38B, #A3FD9E, #80C1FF);
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+  
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  
+font-family: Impact;
+font-size: 81px;
+letter-spacing: 0px;
+word-spacing: nullpx;
+color: #e72323;
+font-weight: normal;
+text-decoration: none;
+font-style: normal;
+font-variant: normal;
+text-transform: uppercase;
+
 }
 
 #app {
@@ -62,7 +75,7 @@ h1 {
 }
 
 .read-the-docs {
-  color: #888;
+  color: #e1cfcf;
 }
 
 button {
@@ -85,8 +98,46 @@ button:focus-visible {
 }
 
 #dad-conteinter{
-  background-color: white;
+  background-color: #fbf6f6;
   border-radius: 30px;
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+/* .btn-hover:hover {
+  background-color: darkcyan;
+  color: #fff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+} */
+
+#score-container h6{
+  font-family: 'Pacifico', cursive;
+font-size: 46px;
+letter-spacing: 0px;
+word-spacing: 0px;
+color: #e60000;
+font-weight: bold;
+text-decoration: none;
+font-style: normal;
+font-variant: normal;
+text-transform: none;
+}
+
+.ocultar {
+  display: none;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @media (prefers-color-scheme: light) {

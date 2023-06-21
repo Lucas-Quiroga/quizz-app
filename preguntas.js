@@ -18,6 +18,7 @@ let puntuacionElemento;
 let respuestaSeleccionada;
 let juegoTerminado = false;
 let totalPreguntas;
+let siguientePreguntaState = true;
 
 // INICIAR EL JUEGO
 export async function iniciarJuego() {
@@ -32,7 +33,9 @@ export async function iniciarJuego() {
   mostrarOpciones(datos.results[indicePregunta]);
   questionNumberFunc(0);
   mostrarPuntaje();
-  siguienteBoton.addEventListener("click", siguientePregunta);
+  siguientePreguntaState
+    ? siguienteBoton.addEventListener("click", siguientePregunta)
+    : false;
 }
 
 function startTimer() {
@@ -86,31 +89,27 @@ function mostrarOpciones(preguntaActual) {
     ...preguntaActual.incorrect_answers,
     preguntaActual.correct_answer,
   ]);
+  siguienteBoton.classList.add("ocultar");
 
   todasOpciones.forEach((opcion) => {
     const boton = crearBotonOpcion(opcion);
     contenedorOpciones.appendChild(boton);
-    if (opcion === preguntaActual.correct_answer) {
-      boton.onclick = () => {
-        obtenerRespuesta(opcion);
+
+    boton.onclick = () => {
+      obtenerRespuesta(opcion);
+      if (opcion === preguntaActual.correct_answer) {
         boton.classList.add("btn", "btn-success");
         desactivarOpciones(contenedorOpciones);
-        opcionSeleccionada = true;
-      };
-      opcionSeleccionada = false;
-    } else {
-      boton.onclick = () => {
-        obtenerRespuesta(opcion);
+      } else {
         boton.classList.add("btn", "btn-danger");
         desactivarOpciones(contenedorOpciones);
         mostrarRespuestaCorrecta(
           contenedorOpciones,
           preguntaActual.correct_answer
         );
-        opcionSeleccionada = true;
-      };
-      opcionSeleccionada = false;
-    }
+      }
+      opcionSeleccionada = true;
+    };
   });
 }
 
@@ -119,6 +118,7 @@ function siguientePregunta() {
   if (!opcionSeleccionada) {
     return;
   }
+
   const preguntaActual = datos.results[indicePregunta];
   const respuestaUsuario = respuestaSeleccionada; // Obtener la respuesta seleccionada por el usuario
 
@@ -129,19 +129,21 @@ function siguientePregunta() {
 
   indicePregunta++;
 
+  siguienteBoton.classList.add("btn-secondary");
+
   if (indicePregunta >= datos.results.length) {
     juegoTerminado = true;
     containerPrincipal.innerHTML = `
-    <div class="card text-center">
-    <div class="card-header">
-      Juego finalizado
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">Puntuación: ${puntuacion} de ${totalPreguntas}</h5>
-      <p class="card-text">¡Has completado todas las preguntas!</p>
-      <a href="/" class="btn btn-primary">Volver a jugar</a>
-    </div>
-  </div>
+      <div class="card text-center">
+        <div class="card-header">
+          Juego finalizado
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Puntuación: ${puntuacion} de ${totalPreguntas}</h5>
+          <p class="card-text">¡Has completado todas las preguntas!</p>
+          <a href="/" class="btn btn-primary">Volver a jugar</a>
+        </div>
+      </div>
     `;
   } else {
     // Mostrar la siguiente pregunta
@@ -163,8 +165,7 @@ function sumarPuntaje() {
 
 // ORDENAR LAS OPCIONES ALEATORIAMENTE
 function ordenarOpciones(array) {
-  const arrayLimpio = [...array];
-  return arrayLimpio.sort(() => Math.random() - 0.5);
+  return [...array].sort(() => Math.random() - 0.5);
 }
 
 // CREAR LOS BOTONES
@@ -172,12 +173,17 @@ function crearBotonOpcion(opcion) {
   const boton = document.createElement("button");
   boton.innerText = opcion;
   boton.classList.add("btn", "btn-primary", "mr-2");
+  boton.style.boxShadow = "0px 9px 7px 0px rgba(138,135,230,1)";
   return boton;
 }
 
 // AGARRAR LA RESPUESTA
 function obtenerRespuesta(opcion) {
   respuestaSeleccionada = opcion;
+
+  siguientePreguntaState = true;
+  siguienteBoton.classList.remove("ocultar");
+  siguienteBoton.classList.add("btn-secondary");
 }
 
 // DESACTIVAR OPCIONES
