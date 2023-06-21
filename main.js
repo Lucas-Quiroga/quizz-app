@@ -1,7 +1,3 @@
-import { iniciarJuego } from "./preguntas";
+import { startGame } from "./game";
 
-function iniciarAplicacion() {
-  iniciarJuego();
-}
-
-iniciarAplicacion();
+startGame();
